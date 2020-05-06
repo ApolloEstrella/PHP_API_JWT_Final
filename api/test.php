@@ -1,6 +1,8 @@
 <?php
 require "../vendor/autoload.php";
+
 use \Firebase\JWT\JWT;
+
 /*
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -16,6 +18,9 @@ $jwt = null;
 
 $data = json_decode(file_get_contents("php://input"));
 
+parse_str($_SERVER['QUERY_STRING'], $output);
+
+$action = $output['action'];
 
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
 
@@ -28,28 +33,27 @@ $arr = explode(" ", $authHeader);
 
 $jwt = $arr[1];
 
-if($jwt){
+if ($jwt) {
 
     try {
 
         $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
 
         // Access is granted. Add code of the operation here 
+        switch ($action) {
+            case 'read':
+                include ('../api/product/read.php');
+                break;
+            default:
+                break;
+        }
+    } catch (Exception $e) {
 
-        /*echo json_encode(array(
-            "message" => "Access granted:",
+        http_response_code(401);
+
+        echo json_encode(array(
+            "message" => "Access denied.",
             "error" => $e->getMessage()
-        ));*/
-
-    }catch (Exception $e){
-
-    http_response_code(401);
-
-    echo json_encode(array(
-        "message" => "Access denied.",
-        "error" => $e->getMessage()
-    ));
+        ));
+    }
 }
-
-}
-?>

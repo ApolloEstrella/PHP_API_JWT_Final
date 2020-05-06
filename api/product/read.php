@@ -4,8 +4,10 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 // include database and object files
-include_once '../config/database.php';
-include_once '../objects/product.php';
+$pt = $_SERVER['DOCUMENT_ROOT'];
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/PHP_APIFinal/api/config/database.php';  
+include_once $_SERVER['DOCUMENT_ROOT'] . '/PHP_APIFinal/api/objects/product.php';
 
 // instantiate database and product object
 $database = new Database();
